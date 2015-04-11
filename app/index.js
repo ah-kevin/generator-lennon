@@ -89,22 +89,23 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         bower: function () {
-            // var bower = {
-            //     name: this._.slugify(this.appname),
-            //     private: true,
-            //     dependencies: {}
-            // };
+             var bower = {
+                 //name: this._.slugify(this.appname),
+                 name:this.appname,
+                 private: true,
+                 dependencies: {}
+             };
 
-            // if (this.includeBootstrap) {
-            //     var bs = 'bootstrap' + '';
-            //     bower.dependencies[bs] = '~3.3.1';
-            // } else {
-            //     bower.dependencies.jquery = '~2.1.1';
-            // }
+             if (this.includeBootstrap) {
+                 var bs = 'bootstrap' + '';
+                 bower.dependencies[bs] = '~3.3.1';
+             } else {
+                 bower.dependencies.jquery = '~2.1.1';
+             }
 
-            // if (this.includeModernizr) {
-            //     bower.dependencies.modernizr = '~2.8.1';
-            // }
+             if (this.includeModernizr) {
+                 bower.dependencies.modernizr = '~2.8.1';
+             }
 
             this.copy('bowerrc', '.bowerrc');
             this.write('bower.json', JSON.stringify(bower, null, 2));
