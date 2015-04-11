@@ -1,6 +1,6 @@
 {
   "name": "generator-lennon",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Yeoman generator lennon",
   "license": "MIT",
   "main": "app/index.js",
@@ -11,19 +11,26 @@
     "url": "https://github.com/ah-kevin"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --reporter spec"
   },
   "files": [
     "app"
   ],
   "keywords": [
-    "yeoman-generator"
+    "yeoman-generator",
+    "web",
+    "app",
+    "front-end",
+    "h5bp",
+    "modernizr",
+    "jquery",
+    "gulp"
   ],
   "dependencies": {
-    "yeoman-generator": "^0.19.0",
     "chalk": "^1.0.0",
     "wiredep": "^2.2.2",
-    "yosay": "^1.0.2"
+    "yeoman-generator": "^0.18.5",
+    "yosay": "^1.0.0"
   },
   "peerDependencies": {
     "yo": ">=1.0.0",

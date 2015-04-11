@@ -2,11 +2,12 @@ Description:
     Creates a new basic front-end web application.
 
 Options:
+    Sass: Include Sass
     Bootstrap: Include Bootstrap or Bootstrap Sass if Sass is included
     Modernizr: Include Modernizr
 
 Example:
-    yo lennon
+    yo gulp-webapp
 
     This will create:
         gulpfile.js: Configuration for the task runner.
