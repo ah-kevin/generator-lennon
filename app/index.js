@@ -47,11 +47,8 @@ module.exports = yeoman.generators.Base.extend({
       type: 'checkbox',
       name: 'features',
       message: 'What more would you like?',
-      choices: [{
-        name: 'Sass',
-        value: 'includeSass',
-        checked: true
-      }, {
+      choices: [
+        {
         name: 'Bootstrap',
         value: 'includeBootstrap',
         checked: true
@@ -71,7 +68,6 @@ module.exports = yeoman.generators.Base.extend({
 
       // manually deal with the response, get back and store the results.
       // we change a bit this way of doing to automatically do this in the self.prompt() method.
-      this.includeSass = hasFeature('includeSass');
       this.includeBootstrap = hasFeature('includeBootstrap');
       this.includeModernizr = hasFeature('includeModernizr');
 
@@ -101,7 +97,7 @@ module.exports = yeoman.generators.Base.extend({
       };
 
       if (this.includeBootstrap) {
-        var bs = 'bootstrap' + (this.includeSass ? '-sass-official' : '');
+        var bs = 'bootstrap' + '';
         bower.dependencies[bs] = '~3.3.1';
       } else {
         bower.dependencies.jquery = '~2.1.1';
@@ -148,12 +144,8 @@ module.exports = yeoman.generators.Base.extend({
       // wire Bootstrap plugins
       if (this.includeBootstrap) {
         var bs = '/bower_components/';
-
-        if (this.includeSass) {
-          bs += 'bootstrap-sass-official/assets/javascripts/bootstrap/';
-        } else {
           bs += 'bootstrap/js/';
-        }
+
 
         this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
           bs + 'affix.js',
@@ -217,21 +209,10 @@ module.exports = yeoman.generators.Base.extend({
       wiredep({
         bowerJson: bowerJson,
         directory: 'bower_components',
-        exclude: ['bootstrap-sass', 'bootstrap.js'],
+        exclude: 'bootstrap.js',
         ignorePath: /^(\.\.\/)*\.\./,
         src: 'app/index.html'
       });
-
-      if (this.includeSass) {
-        // wire Bower packages to .scss
-        wiredep({
-          bowerJson: bowerJson,
-          directory: 'bower_components',
-          ignorePath: /^(\.\.\/)+/,
-          src: 'app/styles/*.scss'
-        });
-      }
-
       // ideally we should use composeWith, but we're invoking it here
       // because generator-mocha is changing the working directory
       // https://github.com/yeoman/generator-mocha/issues/28
