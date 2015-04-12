@@ -40,7 +40,7 @@ module.exports = yeoman.generators.Base.extend({
     var done = this.async();
 
     if (!this.options['skip-welcome-message']) {
-      this.log(yosay('\'Allo \'allo! Out of the box I include HTML5 Boilerplate, jQuery, and a gulpfile.js to build your app.'));
+      this.log(yosay('创建属于自己的 HTML5 模版, jQuery, and a gulpfile.js to build your app.'));
     }
 
     var prompts = [{
