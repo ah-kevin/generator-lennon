@@ -10,11 +10,11 @@ module.exports = yeoman.generators.Base.extend({
   constructor: function () {
     yeoman.generators.Base.apply(this, arguments);
 
-    this.option('test-framework', {
-      desc: 'Test framework to be invoked',
-      type: String,
-      defaults: 'mocha'
-    });
+    //this.option('test-framework', {
+    //  desc: 'Test framework to be invoked',
+    //  type: String,
+    //  defaults: 'mocha'
+    //});
 
     this.option('skip-welcome-message', {
       desc: 'Skips the welcome message',
@@ -209,12 +209,12 @@ module.exports = yeoman.generators.Base.extend({
       // ideally we should use composeWith, but we're invoking it here
       // because generator-mocha is changing the working directory
       // https://github.com/yeoman/generator-mocha/issues/28
-      this.invoke(this.options['test-framework'], {
-        options: {
-          'skip-message': this.options['skip-install-message'],
-          'skip-install': this.options['skip-install']
-        }
-      });
+      //this.invoke(this.options['test-framework'], {
+      //  options: {
+      //    'skip-message': this.options['skip-install-message'],
+      //    'skip-install': this.options['skip-install']
+      //  }
+      //});
     }.bind(this));
   }
 });
