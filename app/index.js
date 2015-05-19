@@ -119,7 +119,7 @@ module.exports = yeoman.generators.Base.extend({
 
     h5bp: function () {
       this.copy('favicon.ico', 'app/favicon.ico');
-      this.copy('apple-touch-icon.jpg', 'app/apple-touch-icon.jpg');
+      this.copy('apple-touch-icon.png', 'app/apple-touch-icon.png');
       this.copy('robots.txt', 'app/robots.txt');
     },
 
