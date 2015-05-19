@@ -40,7 +40,7 @@ module.exports = yeoman.generators.Base.extend({
     var done = this.async();
 
     if (!this.options['skip-welcome-message']) {
-      this.log(yosay('创建属于自己的 HTML5 模版, jQuery, and a gulpfile.js to build your app.'));
+      this.log(yosay('创建属于自己的 HTML5, jQuery, and a gulpfile.js to build your app.'));
     }
 
     var prompts = [{
@@ -111,9 +111,7 @@ module.exports = yeoman.generators.Base.extend({
       this.write('bower.json', JSON.stringify(bower, null, 2));
     },
 
-    jshint: function () {
-      this.copy('jshintrc', '.jshintrc');
-    },
+
 
     editorConfig: function () {
       this.copy('editorconfig', '.editorconfig');
