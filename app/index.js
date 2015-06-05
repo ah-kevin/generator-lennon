@@ -62,13 +62,7 @@ module.exports = yeoman.generators.Base.extend({
                     name: 'Modernizr',
                     value: 'includeModernizr',
                     checked: true
-                },
-                {
-                    name:'browserify',
-                    value:'includeBrowserify',
-                    checked:true
-                }
-            ]
+                }]
         }];
 
         this.prompt(prompts, function (answers) {
@@ -83,7 +77,7 @@ module.exports = yeoman.generators.Base.extend({
             this.includeSass = hasFeature('includeSass');
             this.includeBootstrap = hasFeature('includeBootstrap');
             this.includeModernizr = hasFeature('includeModernizr');
-            this.includeBrowserify =hasFeature('includeBrowserify');
+
             done();
         }.bind(this));
     },
@@ -152,7 +146,6 @@ module.exports = yeoman.generators.Base.extend({
             this.indexFile = this.engine(this.indexFile, this);
 
             // wire Bootstrap plugins
-        if(!this.includeBrowserify){
             if (this.includeBootstrap) {
                 var bs = '/bower_components/';
 
@@ -176,7 +169,7 @@ module.exports = yeoman.generators.Base.extend({
                     bs + 'collapse.js',
                     bs + 'tab.js'
                 ]);
-            }}
+            }
 
             this.indexFile = this.appendFiles({
                 html: this.indexFile,
@@ -194,12 +187,7 @@ module.exports = yeoman.generators.Base.extend({
             this.mkdir('app/styles');
             this.mkdir('app/images');
             this.mkdir('app/fonts');
-            if(this.includeBrowserify){
-                this.mkdir('app/components');
-                this.copy('main.js', 'app/components/main.js');
-            }else{
-                this.copy('main.js', 'app/scripts/main.js');
-            }
+            this.copy('main.js', 'app/scripts/main.js');
         }
     },
 
@@ -223,27 +211,26 @@ module.exports = yeoman.generators.Base.extend({
         });
 
         this.on('end', function () {
+            var bowerJson = this.dest.readJSON('bower.json');
 
-              var bowerJson = this.dest.readJSON('bower.json');
-              // wire Bower packages to .html
-              wiredep({
-                  bowerJson: bowerJson,
-                  directory: 'bower_components',
-                  exclude: ['bootstrap-sass', 'bootstrap.js'],
-                  ignorePath: /^(\.\.\/)*\.\./,
-                  src: 'app/index.html'
-              });
+            // wire Bower packages to .html
+            wiredep({
+                bowerJson: bowerJson,
+                directory: 'bower_components',
+                exclude: ['bootstrap-sass', 'bootstrap.js'],
+                ignorePath: /^(\.\.\/)*\.\./,
+                src: 'app/index.html'
+            });
 
-              if (this.includeSass) {
-                  // wire Bower packages to .scss
-                  wiredep({
-                      bowerJson: bowerJson,
-                      directory: 'bower_components',
-                      ignorePath: /^(\.\.\/)+/,
-                      src: 'app/styles/*.scss'
-                  });
-              }
-
+            if (this.includeSass) {
+                // wire Bower packages to .scss
+                wiredep({
+                    bowerJson: bowerJson,
+                    directory: 'bower_components',
+                    ignorePath: /^(\.\.\/)+/,
+                    src: 'app/styles/*.scss'
+                });
+            }
             // ideally we should use composeWith, but we're invoking it here
             // because generator-mocha is changing the working directory
             // https://github.com/yeoman/generator-mocha/issues/28
