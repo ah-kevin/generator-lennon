@@ -5,9 +5,12 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
+<% if(includeBrowserify){ %>
+    var browserify = require('gulp-browserify');
+<%}%>
 
 gulp.task('styles', function () {<% if (includeSass) { %>
-  return gulp.src('app/styles/*.scss')
+   gulp.src('app/styles/*.scss')
           .pipe($.sourcemaps.init())
           .pipe($.sass({
             outputStyle: 'expanded',
@@ -51,6 +54,18 @@ gulp.task('images', function () {
       .pipe(gulp.dest('dist/images'));
 });
 
+<% if (includeBrowserify) { %>
+gulp.task('borwserify', function() {
+    // Single entry point to browserify
+    gulp.src('app/components/main.js')
+        .pipe(browserify({
+          insertGlobals : true,
+          debug : !gulp.env.production
+        }))
+        .pipe(gulp.dest('app/scripts'))
+});
+<% } %>
+
 gulp.task('fonts', function () {
   return gulp.src(require('main-bower-files')({
     filter: '**/*.{eot,svg,ttf,woff,woff2}'
@@ -89,7 +104,8 @@ gulp.task('serve', ['styles', 'fonts'], function () {
     'app/images/**/*',
     '.tmp/fonts/**/*'
   ]).on('change', reload);
-
+  <% if (includeBrowserify) { %>
+  gulp.watch('app/components/**/*.js', ['borwserify']);<% } %>
   gulp.watch('app/styles/**/*.<%= includeSass ? 'scss' : 'css' %>', ['styles']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);

@@ -62,7 +62,13 @@ module.exports = yeoman.generators.Base.extend({
                     name: 'Modernizr',
                     value: 'includeModernizr',
                     checked: true
-                }]
+                },
+                {
+                    name:'browserify',
+                    value:'includeBrowserify',
+                    checked:true
+                }
+            ]
         }];
 
         this.prompt(prompts, function (answers) {
@@ -77,7 +83,7 @@ module.exports = yeoman.generators.Base.extend({
             this.includeSass = hasFeature('includeSass');
             this.includeBootstrap = hasFeature('includeBootstrap');
             this.includeModernizr = hasFeature('includeModernizr');
-
+            this.includeBrowserify =hasFeature('includeBrowserify');
             done();
         }.bind(this));
     },
@@ -187,7 +193,12 @@ module.exports = yeoman.generators.Base.extend({
             this.mkdir('app/styles');
             this.mkdir('app/images');
             this.mkdir('app/fonts');
-            this.copy('main.js', 'app/scripts/main.js');
+            if(this.includeBrowserify){
+                this.mkdir('app/components');
+                this.copy('main.js', 'app/components/main.js');
+            }else{
+                this.copy('main.js', 'app/scripts/main.js');
+            }
         }
     },
 
