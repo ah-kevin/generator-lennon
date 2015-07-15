@@ -26,6 +26,11 @@
 <!--[if lt IE 10]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
+<% if (includeCocos2djs) { %>
+
+<canvas id="gameCanvas" width="800" height="450"></canvas>
+<% } else { %>
+
 <% if (includeBootstrap) { %>
 <div class="container">
   <div class="header">
@@ -74,6 +79,7 @@
   </ul>
 </div>
 <% } %>
+<% } %>
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>
   (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -88,5 +94,10 @@
 <!-- bower:js -->
 <!-- endbower -->
 <!-- endbuild -->
+<% if (includeCocos2djs) { %>
+<!--build:js scripts/cocos2d.min.js -->
+<script src="cocos2d/cocos2d-js-v3.6.js"></script>
+<!-- endbuild -->
+<% } %>
 </body>
 </html>

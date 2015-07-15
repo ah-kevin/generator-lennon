@@ -25,7 +25,7 @@ gulp.task('styles', function () {<% if (includeSass) { %>
 });
 
 
-gulp.task('html', ['styles'], function () {
+gulp.task('html', [<% if (includeCocos2djs) { %>'js',<% } %>'styles'], function () {
   var assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
 
   return gulp.src('app/*.html')
@@ -37,6 +37,16 @@ gulp.task('html', ['styles'], function () {
     .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
     .pipe(gulp.dest('dist'));
 });
+
+<% if(includeCocos2djs){ %>
+
+  gulp.task('js', function () {
+    return gulp.src('app/scripts/**/*.js')
+        .pipe($.concat('main.js'))
+        .pipe(gulp.dest('.tmp/scripts'))
+        .pipe(reload({stream: true}));
+  });
+<% } %>
 
 gulp.task('images', function () {
   return gulp.src('app/images/**/*')
@@ -70,7 +80,7 @@ gulp.task('extras', function () {
 
 gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', ['styles', 'fonts'], function () {
+gulp.task('serve', [<% if (includeCocos2djs) { %>'js',<% } %>'styles', 'fonts'], function () {
   browserSync({
     notify: false,
     port: 9000,
@@ -85,11 +95,18 @@ gulp.task('serve', ['styles', 'fonts'], function () {
   // watch for changes
   gulp.watch([
     'app/*.html',
+    <% if (includeCocos2djs) { %>
+    '.tmp/scripts/**/*.js',
+        <% } else { %>
     'app/scripts/**/*.js',
+        <% } %>
     'app/images/**/*',
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
+  <% if (includeCocos2djs) { %>
+    gulp.watch('app/scripts/**/*.js', ['js']);
+  <% } %>
   gulp.watch('app/styles/**/*.<%= includeSass ? 'scss' : 'css' %>', ['styles']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
@@ -130,3 +147,4 @@ gulp.task('build', [ 'html', 'images', 'fonts', 'extras'], function () {
 gulp.task('default', ['clean'], function () {
   gulp.start('build');
 });
+

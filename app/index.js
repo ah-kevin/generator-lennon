@@ -62,7 +62,13 @@ module.exports = yeoman.generators.Base.extend({
                     name: 'Modernizr',
                     value: 'includeModernizr',
                     checked: true
-                }]
+                },
+                {
+                    name:'cocos2d-js',
+                    value:'includeCocos2djs',
+                    checked:true
+                }
+            ]
         }];
 
         this.prompt(prompts, function (answers) {
@@ -77,6 +83,7 @@ module.exports = yeoman.generators.Base.extend({
             this.includeSass = hasFeature('includeSass');
             this.includeBootstrap = hasFeature('includeBootstrap');
             this.includeModernizr = hasFeature('includeModernizr');
+            this.includeCocos2djs = hasFeature('includeCocos2djs');
 
             done();
         }.bind(this));
@@ -106,8 +113,6 @@ module.exports = yeoman.generators.Base.extend({
             if (this.includeBootstrap) {
                 var bs = 'bootstrap' + (this.includeSass ? '-sass' : '');
                 bower.dependencies[bs] = '~3.3.1';
-            } else {
-                bower.dependencies.jquery = '~2.1.1';
             }
 
             if (this.includeModernizr) {
@@ -127,6 +132,9 @@ module.exports = yeoman.generators.Base.extend({
             this.copy('favicon.ico', 'app/favicon.ico');
             this.copy('apple-touch-icon.png', 'app/apple-touch-icon.png');
             this.copy('robots.txt', 'app/robots.txt');
+            if(this.includeCocos2djs) {
+                this.copy('project.json', 'app/project.json');
+            }
         },
 
         mainStylesheet: function () {
@@ -187,7 +195,22 @@ module.exports = yeoman.generators.Base.extend({
             this.mkdir('app/styles');
             this.mkdir('app/images');
             this.mkdir('app/fonts');
-            this.copy('main.js', 'app/scripts/main.js');
+            if(this.includeCocos2djs) {
+                this.mkdir('app/cocos2d');
+                this.mkdir('app/scripts/config');
+                this.mkdir('bower_components')
+                this.copy('cocos2d-js-v3.6.js', 'app/cocos2d/cocos2d-js-v3.6.js');
+                this.copy('loading.js', 'app/cocos2d/loading.js');
+                this.copy('images/CloseNormal.png', 'app/images/CloseNormal.png');
+                this.copy('images/CloseSelected.png', 'app/images/CloseSelected.png');
+                this.copy('images/HelloWorld.png', 'app/images/HelloWorld.png');
+                this.copy('scripts/main.js', 'app/scripts/main.js');
+                this.copy('scripts/app.js', 'app/scripts/config/app.js');
+                this.copy('scripts/resource.js', 'app/scripts/config/resource.js');
+            }else{
+                this.copy('main.js', 'app/scripts/main.js');
+            }
+
         }
     },
 
