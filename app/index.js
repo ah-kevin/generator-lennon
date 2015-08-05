@@ -254,7 +254,7 @@ module.exports = yeoman.generators.Base.extend({
                 src: 'app/index.html'
             });
 
-            if (this.includeSass) {
+            if (this.includeSass || this.includeCompass) {
                 // wire Bower packages to .scss
                 wiredep({
                     bowerJson: bowerJson,
