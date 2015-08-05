@@ -67,6 +67,11 @@ module.exports = yeoman.generators.Base.extend({
                     name:'cocos2d-js',
                     value:'includeCocos2djs',
                     checked:true
+                },
+                {
+                  name:'compass',
+                  value:'includeCompass',
+                  checked:true
                 }
             ]
         }];
@@ -84,6 +89,7 @@ module.exports = yeoman.generators.Base.extend({
             this.includeBootstrap = hasFeature('includeBootstrap');
             this.includeModernizr = hasFeature('includeModernizr');
             this.includeCocos2djs = hasFeature('includeCocos2djs');
+            this.includeCompass = hasFeature('includeCompass');
 
             done();
         }.bind(this));
@@ -111,8 +117,8 @@ module.exports = yeoman.generators.Base.extend({
             };
 
             if (this.includeBootstrap) {
-                var bs = 'bootstrap' + (this.includeSass ? '-sass' : '');
-                bower.dependencies[bs] = '~3.3.1';
+                var bs = 'bootstrap' + (this.includeSass ||this.includeCompass ? '-sass' : '');
+                bower.dependencies[bs] = '~3.3.5';
             }
 
             if (this.includeModernizr) {
@@ -140,7 +146,7 @@ module.exports = yeoman.generators.Base.extend({
         mainStylesheet: function () {
             var css = 'main';
 
-            if (this.includeSass) {
+            if (this.includeSass||this.includeCompass) {
                 css += '.scss';
             } else {
                 css += '.css';
@@ -157,7 +163,7 @@ module.exports = yeoman.generators.Base.extend({
             if (this.includeBootstrap) {
                 var bs = '/bower_components/';
 
-                if (this.includeSass) {
+                if (this.includeSass || this.includeCompass) {
                     bs += 'bootstrap-sass/assets/javascripts/bootstrap/';
                 } else {
                     bs += 'bootstrap/js/';
@@ -210,6 +216,9 @@ module.exports = yeoman.generators.Base.extend({
             }else{
                 this.copy('main.js', 'app/scripts/main.js');
             }
+          if(this.includeCompass){
+            this.copy('config.rb','app/config.rb')
+          }
 
         }
     },

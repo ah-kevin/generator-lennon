@@ -14,7 +14,23 @@ gulp.task('styles', function () {<% if (includeSass) { %>
         outputStyle: 'expanded',
         precision: 10,
         includePaths: ['.']
-      }).on('error', $.sass.logError))<% } else { %>
+      }).on('error', $.sass.logError))<% } else if(includeCompass){ %>
+    return  gulp.src('app/styles/*.scss')
+            .pipe($.plumber({
+                errorHandler: function (error) {
+                    console.log(error.message);
+                    this.emit('end');
+                }}))
+            .pipe($.sourcemaps.init())
+            .pipe($.compass({
+                css: 'app/styles/_css',
+                sass: 'app/styles/',
+                image: 'app/images'
+            }))
+            .on('error', function(err) {
+                console.log(err);
+            })
+  <% }else{ %>
   return gulp.src('app/styles/*.css')
           .pipe($.sourcemaps.init())<% } %>
        .pipe($.autoprefixer({browsers: ['last 1 version']}))
@@ -106,7 +122,7 @@ gulp.task('serve', [<% if (includeCocos2djs) { %>'js',<% } %>'styles', 'fonts'],
   <% if (includeCocos2djs) { %>
     gulp.watch('app/scripts/**/*.js', ['js']);
   <% } %>
-  gulp.watch('app/styles/**/*.<%= includeSass ? 'scss' : 'css' %>', ['styles']);
+  gulp.watch('app/styles/**/*.<%= includeSass || includeCompass ? 'scss' : 'css' %>', ['styles']);
   gulp.watch('app/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -132,7 +148,7 @@ gulp.task('wiredep', function () {
         .pipe(gulp.dest('app/styles'));
   <% } %>
   gulp.src('app/*.html')
-      .pipe(wiredep({<% if (includeSass && includeBootstrap) { %>
+      .pipe(wiredep({<% if ((includeSass||includeCompass)&& includeBootstrap) { %>
     exclude: ['bootstrap-sass'],<% } %>
   ignorePath: /^(\.\.\/)*\.\./
 }))
