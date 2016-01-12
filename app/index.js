@@ -68,7 +68,7 @@ module.exports = yeoman.generators.Base.extend({
         {
           name: 'cocos2d-js',
           value: 'includeCocos2djs',
-          checked: true
+          checked: false
         },
         {
           name: 'compass',
@@ -208,7 +208,14 @@ module.exports = yeoman.generators.Base.extend({
         );
       }
     },
-
+    copyfile: function () {
+      if (this.includeCompass) {
+        this.fs.copy(
+          this.templatePath('config.rb'),
+          this.destinationPath('app/config.rb')
+        )
+      }
+    },
     styles: function () {
       var css = 'main';
 
@@ -293,10 +300,6 @@ module.exports = yeoman.generators.Base.extend({
         this.copy('scripts/resource.js', 'app/scripts/config/resource.js');
       } else {
         this.copy('main.js', 'app/scripts/main.js');
-      }
-      if (this.includeCompass) {
-          this.templatePath('config.rb'),
-          this.destinationPath('app/config.rb')
       }
 
     }
