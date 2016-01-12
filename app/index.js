@@ -75,15 +75,32 @@ module.exports = yeoman.generators.Base.extend({
           value: 'includeCompass',
           checked: true
         }]
-    }, {
+        },
+      {
       type: 'confirm',
       name: 'includeJQuery',
       message: 'Would you like to include jQuery?',
       default: true,
       when: function (answers) {
-        return answers.features.indexOf('includeBootstrap') === -1;
+        return answers.features.indexOf('includeBootstrap') === -1;}
+      },
+      {
+        type: 'confirm',
+        name: 'includeflexible',
+        message: 'Would you like to include flexible',
+        default: true,
+        when: function (answers) {
+          return answers.features.indexOf('includeBootstrap') === -1;}
+      },
+      {
+        type: 'confirm',
+        name: 'includemodal',
+        message: 'Would you like to include modal',
+        default: true,
+        when: function (answers) {
+          return answers.features.indexOf('includeBootstrap') === -1;}
       }
-    }];
+    ];
 
     this.prompt(prompts, function (answers) {
       var features = answers.features;
@@ -100,6 +117,8 @@ module.exports = yeoman.generators.Base.extend({
       this.includeCocos2djs = hasFeature('includeCocos2djs');
       this.includeCompass = hasFeature('includeCompass');
       this.includeJQuery = answers.includeJQuery;
+      this.includeflexible=answers.includeflexible;
+      this.includemodal=answers.includemodal;
       done();
     }.bind(this));
   },
@@ -215,6 +234,17 @@ module.exports = yeoman.generators.Base.extend({
           this.destinationPath('app/config.rb')
         )
       }
+      if(this.includeflexible){
+        this.fs.copy(
+          this.templatePath('componets/flexible/**'),
+          this.destinationPath('app/scripts/flexible/')
+        )
+      }
+      if(this.includemodal){
+        this.copy('componets/modal/modal.js', 'app/scripts/modal/modal.js');
+        this.copy('componets/modal/modal.scss', 'app/styles/modal.scss');
+
+      }
     },
     styles: function () {
       var css = 'main';
@@ -228,7 +258,8 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath(css),
         this.destinationPath('app/styles/' + css),
         {
-          includeBootstrap: this.includeBootstrap
+          includeBootstrap: this.includeBootstrap,
+          includeflexible:this.includeflexible
         }
       );
     },
@@ -261,6 +292,8 @@ module.exports = yeoman.generators.Base.extend({
           includeModernizr: this.includeModernizr,
           includeCocos2djs: this.includeCocos2djs,
           includeJQuery: this.includeJQuery,
+          includeflexible:this.includeflexible,
+          includemodal:this.includemodal,
           bsPath: bsPath,
           bsPlugins: [
             'affix',
@@ -283,6 +316,7 @@ module.exports = yeoman.generators.Base.extend({
     misc: function () {
       mkdir('app');
       mkdir('app/scripts');
+      mkdir('app/scripts/flexible');
       mkdir('app/styles');
       mkdir('app/images');
       mkdir('app/fonts');

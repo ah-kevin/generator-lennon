@@ -9,6 +9,7 @@
   padding: 0.2em 0;
 }
 
+
 /* Space out content a bit */
 body {
   padding-top: 20px;
@@ -90,14 +91,55 @@ body {
   }
 }<% } else { %>// bower:scss
 // endbower
-
 body {
   background: #fafafa;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
 }
 
-.hero-unit {
+      <% if (includeflexible) { %>
+
+        $base-font-size: 64px;
+        @function calculateRem($size) {
+          $remSize: $size / $base-font-size;
+          @return $remSize * 1rem;
+        }
+
+        //字体根据dpr设置px,默认是dpr为2时候的
+        @mixin dpr($size) {
+          font-size: round($size/ 2) * 1px;
+          [data-dpr="2"] & {
+            font-size: $size*1px;
+          }
+          // for mx3
+          [data-dpr="2.5"] & {
+            font-size: round($size * 2.5 / 2) * 1px;
+          }
+          // for 小米note
+          [data-dpr="2.75"] & {
+            font-size: round($size * 2.75 / 2) * 1px;
+          }
+          [data-dpr="3"] & {
+            font-size: round($size / 2 * 3) * 1px
+          }
+          // for 三星note4
+          [data-dpr="4"] & {
+            font-size: $size * 2px;
+          }
+        }
+
+       /*
+        @mixin animation-time($delay,$duration) {
+          @include animation-delay($delay);
+          @include animation-duration($duration);
+          @include animation-fill-mode(both);
+          @include animation-timing-function(ease);
+        }*/
+      <% } %>
+
+
+
+  .hero-unit {
   margin: 50px auto 0 auto;
   width: 300px;
   font-size: 18px;

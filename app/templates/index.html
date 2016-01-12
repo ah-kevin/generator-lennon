@@ -3,8 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= appname %></title>
+
+  <% if (!includeflexible) { %>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- endbuild -->
+  <% } %>
 
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <!-- Place favicon.ico in the root directory -->
@@ -20,7 +24,16 @@
   <% if (includeModernizr) { %>
   <!-- build:js scripts/vendor/modernizr.js -->
   <script src="/bower_components/modernizr/modernizr.js"></script>
-  <!-- endbuild --><% } %>
+  <!-- endbuild -->
+  <% } %>
+
+  <% if (includeflexible) { %>
+  <!-- build:js scripts/vendor/flexible.js -->
+  <script src="scripts/flexible/flexible.js"></script>
+  <script src="scripts/flexible/flexible_css.debug.js"></script>
+  <!-- endbuild -->
+  <% } %>
+
 </head>
 <body>
 <!--[if lt IE 10]>
@@ -81,10 +94,33 @@
 <% } %>
 <% } %>
 
+<% if (includemodal) { %>
+<!-- 模态框（成功） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog btn">
+    <i data-dismiss="modal"
+       aria-hidden="true"></i>
+
+    <!--<h1>-->
+      <!--您还有<span>0</span>次机会!-->
+    <!--</h1>-->
+     <!--/.modal-content -->
+  </div>
+  <!-- /.modal -->
+</div>
+
+<!--$('#myModalA').modal({
+keyboard: true
+});-->
+<% } %>
 
 <!-- build:js scripts/vendor.js -->
 <!-- bower:js -->
 <!-- endbower -->
+<% if (includemodal) { %>
+<script src="scripts/modal/modal.js"></script>
+<% } %>
 <!-- endbuild -->
 
 <% if (includeBootstrap) { %>
