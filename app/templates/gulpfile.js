@@ -25,7 +25,8 @@ gulp.task('styles', function () {<% if (includeSass) { %>
             .pipe($.compass({
                 css: 'app/styles/_css',
                 sass: 'app/styles/',
-                image: 'app/images'
+                image: 'app/images',
+                import_path:"./"
             }))
             .on('error', function(err) {
                 console.log(err);
