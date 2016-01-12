@@ -6,7 +6,7 @@ var $ = require('gulp-load-plugins')();
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
-gulp.task('styles', function () {<% if (includeSass) { %>
+gulp.task('styles', function () {<% if (includeSass && !includeCompass) { %>
   return gulp.src('app/styles/*.scss')
       .pipe($.plumber())
       .pipe($.sourcemaps.init())
@@ -14,7 +14,7 @@ gulp.task('styles', function () {<% if (includeSass) { %>
         outputStyle: 'expanded',
         precision: 10,
         includePaths: ['.']
-      }).on('error', $.sass.logError))<% } else if(includeCompass){ %>
+      }).on('error', $.sass.logError))<% } else if(includeCompass&&!includeSass || includeCompass&&includeSass){ %>
     return  gulp.src('app/styles/*.scss')
             .pipe($.plumber({
                 errorHandler: function (error) {
@@ -23,10 +23,11 @@ gulp.task('styles', function () {<% if (includeSass) { %>
                 }}))
             .pipe($.sourcemaps.init())
             .pipe($.compass({
-                css: 'app/styles/_css',
+                css: '.tmp/styles',
                 sass: 'app/styles/',
-                image: 'app/images',
-                import_path:"./"
+                image: 'app/images/',
+                import_path:"./",
+                sourcemap:true
             }))
             .on('error', function(err) {
                 console.log(err);
@@ -36,21 +37,19 @@ gulp.task('styles', function () {<% if (includeSass) { %>
           .pipe($.sourcemaps.init())<% } %>
        .pipe($.autoprefixer({browsers: ['last 1 version']}))
       .pipe($.sourcemaps.write())
+  <% if (!includeCompass) { %>
       .pipe(gulp.dest('.tmp/styles'))
+    <% } %>
       .pipe(reload({stream: true}));
 });
 
 
 gulp.task('html', [<% if (includeCocos2djs) { %>'js',<% } %>'styles'], function () {
-  var assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
-
   return gulp.src('app/*.html')
-    .pipe(assets)
+    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
-    .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
-    .pipe(assets.restore())
-    .pipe($.useref())
-    .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
+    .pipe($.if('*.css', $.cssnano()))
+    .pipe($.if('*.html', $.htmlmin()))
     .pipe(gulp.dest('dist'));
 });
 
@@ -66,15 +65,18 @@ gulp.task('html', [<% if (includeCocos2djs) { %>'js',<% } %>'styles'], function 
 
 gulp.task('images', function () {
   return gulp.src('app/images/**/*')
-      .pipe($.if($.if.isFile, $.cache($.imagemin({
+    .pipe($.if($.if.isFile, $.cache($.imagemin({
         progressive: true,
         interlaced: true,
         // don't remove IDs from SVGs, they are often used
         // as hooks for embedding and styling
         svgoPlugins: [{cleanupIDs: false}]
       }))
-          .on('error', function(err){ console.log(err); this.end; })))
-      .pipe(gulp.dest('dist/images'));
+      .on('error', function (err) {
+        console.log(err);
+        this.end();
+      })))
+    .pipe(gulp.dest('dist/images'));
 });
 
 gulp.task('fonts', function () {
@@ -96,8 +98,8 @@ gulp.task('extras', function () {
 
 gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', [<% if (includeCocos2djs) { %>'js',<% } %>'styles', 'fonts'], function () {
-  browserSync({
+gulp.task('serve', ['clean',<% if (includeCocos2djs) { %>'js',<% } %>'styles', 'fonts'], function () {
+ return browserSync({
     notify: false,
     port: 9000,
     server: {
@@ -164,3 +166,7 @@ gulp.task('default', ['clean'], function () {
   gulp.start('build');
 });
 
+
+gulp.task('server', ['clean'], function () {
+  gulp.start('serve');
+});
