@@ -98,10 +98,10 @@ gulp.task('extras', function () {
 
 gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', ['clean',<% if (includeCocos2djs) { %>'js',<% } %>'styles', 'fonts'], function () {
- return browserSync({
+gulp.task('serve', [<% if (includeCocos2djs) { %>'js',<% } %>'styles', 'fonts'], function () {
+  browserSync({
     notify: false,
-    port: 9000,
+    port: 9002,
     server: {
       baseDir: ['.tmp', 'app'],
       routes: {
