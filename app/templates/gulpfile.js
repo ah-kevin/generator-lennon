@@ -48,8 +48,12 @@ gulp.task('html', [<% if (includeCocos2djs) { %>'js',<% } %>'styles'], function 
   return gulp.src('app/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
+    <% if (includeSass && !includeCompass) { %>
     .pipe($.if('*.css', $.cssnano()))
-    .pipe($.if('*.html', $.htmlmin()))
+    <% } else if(includeCompass&&!includeSass || includeCompass&&includeSass){ %>
+    .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
+    <% } %>
+      .pipe($.if('*.html', $.htmlmin({collapseWhitespace: true})))
     .pipe(gulp.dest('dist'));
 });
 
